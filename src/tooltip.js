@@ -1,12 +1,10 @@
 import {Config} from './config';
-import css from 'tooltip.scss';
 
 export default class Tooltip {
   constructor(div) {
     this._parentDiv = div;
     this._containerDiv = document.createElement('div');
     this._containerDiv.classList.add(`${Config.prefix}-tooltip`);
-    this._containerDiv.stylesheet = css;
     div.appendChild(this._containerDiv);
   }
 

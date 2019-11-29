@@ -4,14 +4,11 @@
   <title>Simple Map</title>
   <meta name="viewport" content="initial-scale=1.0">
   <meta charset="utf-8">
+
   <style>
-    /* Always set the map height explicitly to define the size of the div
-     * element that contains the map. */
-    #map {
-      height: 100%;
-    }
-    /* Optional: Makes the sample page fill the window. */
     html, body {
+      position: fixed;
+      width: 100%;
       height: 100%;
       margin: 0;
       padding: 0;
@@ -31,18 +28,150 @@
       top: 140px;
       left: 10px;
     }
+
+    /* Always set the map height explicitly to define the size of the div
+     * element that contains the map. */
+    #shadowEntry {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+    }
   </style>
 </head>
 <body>
-<div id="map"></div>
+<div id="shadowEntry"></div>
 <button id="start-with-points" onclick="measureTool.start([{lat: 47.94796, lng: -116.70797}, {lat: 47.95028, lng: -116.69907}])">Start With Initial Points</button>
 <button id="start" onclick="measureTool.start()">Start</button>
 <button id="end" onclick="measureTool.end()">End</button>
 <script src="../lib/MeasureTool.js"></script>
+
+<script>
+  const entryDiv = document.getElementById('shadowEntry');
+  const shadowRoot = entryDiv.attachShadow({mode: 'open'});
+  shadowRoot.innerHTML = `
+    <style>
+      #map {
+        height:100%;
+      }
+
+      /* measure-tool.pcss */
+      .measure-tool-svg-overlay {
+        position: absolute;
+        top: -4000px;
+        left: -4000px;
+        width: 8000px;
+        height: 8000px;
+      }
+      .dragging-circle, .cover-circle {
+        fill: white;
+        stroke: black;
+        stroke-width: 2.5px;
+      }
+      .dragging-circle:hover, .cover-circle:hover {
+        cursor: pointer;
+      }
+      .grey-circle {
+        fill: #fcfcfc;
+        stroke: #646464;
+        stroke-width: 2.5px;
+        pointer-events: none;
+      }
+      .base-line {
+        fill: none;
+        stroke: black;
+        stroke-width: 2.5px;
+      }
+      .aux-line {
+        fill: none;
+        stroke: transparent;
+        stroke-width: 8px;
+        cursor: pointer;
+      }
+      .segment-measure-text {
+        stroke: black;
+        pointer-events: none;
+      }
+      .node-measure-text {
+        text-shadow: -1.4px -1.4px rgba(255, 255, 255, 0.4), -1.4px 1.4px rgba(255, 255, 255, 0.4), 1.4px 1.4px rgba(255, 255, 255, 0.4), 1.4px -1.4px rgba(255, 255, 255, 0.4), -1.4px 0 rgba(255, 255, 255, 0.4), 0 1.4px rgba(255, 255, 255, 0.4), 1.4px 0 rgba(255, 255, 255, 0.4), 0 -1.4px rgba(255, 255, 255, 0.4);
+        pointer-events: none;
+      }
+      .node-measure-text.head-text {
+        visibility: hidden;
+      }
+
+      /* measure-tool-tooltip.pcss */
+      .measure-tool-tooltip {
+        display: none;
+        font-family: Roboto, Arial, sans-serif;
+        margin: 6px 15px;
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        padding: 10px;
+        overflow: hidden;
+        pointer-events: none;
+        font-size: 0.7rem;
+        z-index: 999;
+      }
+
+      /* measure-tool-context-menu.pcss */
+      .measure-tool-context-menu {
+        font-family: Roboto, Arial, sans-serif;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        outline: none;
+        position: fixed;
+        display: none;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+        transform: translate3d(0, 0, 0);
+        max-width: 265px;
+        z-index: 1;
+        outline-offset: -2px;
+        background: #fff;
+        padding: 6px 0;
+        white-space: nowrap;
+        cursor: default;
+        margin: 0;
+      }
+      .measure-tool-context-menu ul {
+        padding: 0px;
+        margin: 0px;
+        background-color: white;
+      }
+      .measure-tool-context-menu ul li {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        border-color: transparent;
+        border-style: dotted;
+        border-width: 1px 0;
+        color: #333;
+        font-size: 13px;
+        font-weight: normal;
+        margin: 0;
+        padding: 4px 44px 4px 16px;
+        position: relative;
+        white-space: nowrap;
+      }
+      .measure-tool-context-menu ul li:hover {
+        background-color: #f1f1f1;
+        border-color: #f1f1f1;
+        color: #222;
+        transition: background 0s;
+      }
+    </style>
+    <div id="map"></div>
+  `;
+</script>
+
 <script>
   var map, measureTool;
   function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
+    const mapDiv = shadowRoot.querySelector('#map');
+    map = new google.maps.Map(mapDiv, {
       center: {lat: 47.94796, lng: -116.707975},
       zoom: 16,
       scaleControl: true

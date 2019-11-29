@@ -1,0 +1,43 @@
+.measure-tool-svg-overlay {
+  position: absolute;
+  top: -4000px;
+  left: -4000px;
+  width: 8000px;
+  height: 8000px;
+}
+.dragging-circle, .cover-circle {
+  fill: white;
+  stroke: black;
+  stroke-width: 2.5px;
+}
+.dragging-circle:hover, .cover-circle:hover {
+  cursor: pointer;
+}
+.grey-circle {
+  fill: #fcfcfc;
+  stroke: #646464;
+  stroke-width: 2.5px;
+  pointer-events: none;
+}
+.base-line {
+  fill: none;
+  stroke: black;
+  stroke-width: 2.5px;
+}
+.aux-line {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 8px;
+  cursor: pointer;
+}
+.segment-measure-text {
+  stroke: black;
+  pointer-events: none;
+}
+.node-measure-text {
+  text-shadow: -1.4px -1.4px rgba(255, 255, 255, 0.4), -1.4px 1.4px rgba(255, 255, 255, 0.4), 1.4px 1.4px rgba(255, 255, 255, 0.4), 1.4px -1.4px rgba(255, 255, 255, 0.4), -1.4px 0 rgba(255, 255, 255, 0.4), 0 1.4px rgba(255, 255, 255, 0.4), 1.4px 0 rgba(255, 255, 255, 0.4), 0 -1.4px rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+.node-measure-text.head-text {
+  visibility: hidden;
+}

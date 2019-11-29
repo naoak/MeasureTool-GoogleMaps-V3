@@ -1,4 +1,3 @@
-import css from 'index.scss';
 import {Config} from './config';
 import ContextMenu from './context-menu';
 import Tooltip from './tooltip';
@@ -292,7 +291,7 @@ export default class MeasureTool {
   }
 
   _onRemoveOverlay() {
-    select(`.${Config.prefix}-measure-points-${this._id}`).remove();
+    select(this._overlay.getPanes().overlayMouseTarget).selectAll(`.${Config.prefix}-measure-points-${this._id}`).remove();
   }
 
   /**
